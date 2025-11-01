@@ -6,9 +6,7 @@ pipeline {
                 echo 'Testing Fronted...'
                 sh '''
                     docker build -t complex-client-test-image -f ./client/Dockerfile.dev ./client 
-                    docker run --name complex-client-test-container complex-client-test-image npm run test -- --coverage
-                    docker stop complex-client-test-container || true
-                    docker rm complex-client-test-container || true
+                    docker run --rm --name complex-client-test-container complex-client-test-image npm run test -- --coverage
                 '''
             }
         }
