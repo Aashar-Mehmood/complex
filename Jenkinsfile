@@ -29,10 +29,10 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "docker login -u ${DOCKER_USERNAME} --password-stdin <<< ${DOCKER_PASSWORD}"
                         // Build and tag your Docker image here
-                        sh "docker push aasharmehmood/complex-client-image"
-                        sh "docker push aasharmehmood/complex-nginx-image"
-                        sh "docker push aasharmehmood/complex-server-image"
-                        sh "docker push aasharmehmood/complex-worker-image"
+                        sh "docker push complex-client-image"
+                        sh "docker push complex-nginx-image"
+                        sh "docker push complex-server-image"
+                        sh "docker push complex-worker-image"
                         sh "docker logout"
                     }
                 }
