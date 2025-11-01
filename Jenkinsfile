@@ -26,25 +26,24 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub'){
-            sh '''
-                echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin
-            '''
+        stage('Login to Docker Hub') {
+            steps {
+                sh '''
+                    echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin
+                '''
+            }
         }
 
         stage('Push Images') {
             steps {
-                    sh '''
-                        docker push aasharmehmood/complex-client:latest
-                        docker push aasharmehmood/complex-nginx:latest
-                        docker push aasharmehmood/complex-server:latest
-                        docker push aasharmehmood/complex-worker:latest
-                        docker logout
-                    '''
+                sh '''
+                    docker push aasharmehmood/complex-client:latest
+                    docker push aasharmehmood/complex-nginx:latest
+                    docker push aasharmehmood/complex-server:latest
+                    docker push aasharmehmood/complex-worker:latest
+                    docker logout
+                '''
             }
-                
         }
     }
 }
-
-
