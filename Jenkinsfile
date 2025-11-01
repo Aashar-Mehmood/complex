@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_HUB_CREDS = credentials('DOCKER_HUB_CREDS')
+    }
     stages {
         stage('Test Frontend') {
             steps {
@@ -15,35 +18,33 @@ pipeline {
             steps {
                 echo 'Building...'
                 sh '''
-                    docker build -t complex-client-image ./client 
-                    docker build -t complex-nginx-image ./nginx 
-                    docker build -t complex-server-image ./server 
-                    docker build -t complex-worker-image ./worker 
+                    docker build -t aasharmehmood/complex-client:latest ./client
+                    docker build -t aasharmehmood/complex-nginx:latest ./nginx
+                    docker build -t aasharmehmood/complex-server:latest ./server
+                    docker build -t aasharmehmood/complex-worker:latest ./worker 
                 '''  
             }
         }
 
-        stage('Login to Docker Hub and Push Image') {
+        stage('Login to Docker Hub'){
+            sh '''
+                echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin
+            '''
+        }
+
+        stage('Push Images') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker login -u ${DOCKER_USERNAME} --password-stdin <<< ${DOCKER_PASSWORD}"
-                        // Build and tag your Docker image here
-                        sh "docker push complex-client-image"
-                        sh "docker push complex-nginx-image"
-                        sh "docker push complex-server-image"
-                        sh "docker push complex-worker-image"
-                        sh "docker logout"
-                    }
-                }
+                    sh '''
+                        docker push aasharmehmood/complex-client:latest
+                        docker push aasharmehmood/complex-nginx:latest
+                        docker push aasharmehmood/complex-server:latest
+                        docker push aasharmehmood/complex-worker:latest
+                        docker logout
+                    '''
             }
+                
         }
     }
 }
 
-pipeline {
-    agent any
-    stages {
-        
-    }
-}
+
