@@ -2,6 +2,9 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_CREDS = credentials('DOCKER_HUB_CREDS')
+        AWS_EB_APP_NAME = 'complex'
+        AWS_EB_ENV_NAME = 'Complex-env'
+        AWS_REGION = 'eu-north-1'
     }
     stages {
         stage('Test Frontend') {
@@ -45,5 +48,23 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Deploy to Elastic Beanstalk') {
+            steps {
+                // Using the AWSEB Deployment Plugin
+                step([$class: 'AWSEBDeploymentBuilder',
+                        credentialId:"aashar-aws-creds",
+                        applicationName: AWS_EB_APP_NAME,
+                        environmentName: AWS_EB_ENV_NAME,
+                        awsRegion: AWS_REGION, 
+                        // Other optional parameters like bucketName, checkHealth, excludes, includes, etc.
+                        rootObject: '.',
+                        includes: '**',   // include everything
+                        excludes: '.git/**, node_modules/**' // optional filters
+                    ])
+            }
+        }
     }
 }
+
+
