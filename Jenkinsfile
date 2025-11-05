@@ -51,18 +51,16 @@ pipeline {
         
         stage('Deploy to Elastic Beanstalk') {
             steps {
-                withAWS(credentials: 'aashar-aws-creds', region: "${AWS_REGION}") {
-                    step([$class: 'AWSEBDeploymentBuilder',
-                        credentialId: "aashar-aws-creds",
-                        applicationName: "${AWS_EB_APP_NAME}",
-                        environmentName: "${AWS_EB_ENV_NAME}",
-                        awsRegion: "${AWS_REGION}",
-                        versionLabel: "build-${env.BUILD_NUMBER}", 
-                        rootObject: '.',
-                        includes: '**',
-                        excludes: '.git/**, node_modules/**'
-                    ])
-                }
+                step([$class: 'AWSEBDeploymentBuilder',
+                    credentialId: "aashar-aws-creds",  // Jenkins AWS credentials ID
+                    applicationName: "${AWS_EB_APP_NAME}",
+                    environmentName: "${AWS_EB_ENV_NAME}",
+                    awsRegion: "${AWS_REGION}",
+                    versionLabel: "build-${env.BUILD_NUMBER}",
+                    rootObject: '.',
+                    includes: '**',
+                    excludes: '.git/**, node_modules/**'
+                ])
             }
         }
 
