@@ -49,20 +49,35 @@ pipeline {
             }
         }
         
-        stage('Deploy to Elastic Beanstalk') {
+        stage('Deploy') {
             steps {
-                step([$class: 'AWSEBDeploymentBuilder',
-                    credentialId: "aashar-aws-creds",  // Jenkins AWS credentials ID
-                    applicationName: "${AWS_EB_APP_NAME}",
-                    environmentName: "${AWS_EB_ENV_NAME}",
-                    awsRegion: "${AWS_REGION}",
-                    versionLabel: "build-${env.BUILD_NUMBER}",
-                    rootObject: '.',
-                    includes: '**',
-                    excludes: '.git/**, node_modules/**'
-                ])
+                echo 'Deploying...'
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                                    credentialsId: 'aashar-aws-creds', 
+                                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh '''
+                        eb init ${AWS_EB_APP_NAME} --platform "Docker" --region ${AWS_REGION}
+                        eb use ${AWS_EB_ENV_NAME}
+                        eb deploy
+                    '''
+                }
             }
         }
+
+        // stage('Deploy to Elastic Beanstalk') {
+        //     steps {
+        //         step([$class: 'AWSEBDeploymentBuilder',
+        //             credentialId: "aashar-aws-creds",
+        //             applicationName: "${AWS_EB_APP_NAME}",
+        //             environmentName: "${AWS_EB_ENV_NAME}",
+        //             awsRegion: "${AWS_REGION}",
+        //             versionLabel: "build-${env.BUILD_NUMBER}",
+        //             rootObject: '.',
+        //             includes: '**',
+        //             excludes: '.git/**, node_modules/**'
+        //         ])
+        //     }
+        // }
 
     }
 }
