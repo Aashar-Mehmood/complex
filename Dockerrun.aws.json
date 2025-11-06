@@ -1,6 +1,6 @@
 {
   "AWSEBDockerrunVersion": 3,
-  "containerDefinations": [
+  "containerDefinitions": [
     {
       "name": "client",
       "image": "aasharmehmood/complex-client",
