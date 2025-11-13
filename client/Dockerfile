@@ -1,6 +1,5 @@
-ENV NODE_OPTIONS="--no-experimental-webstorage"
-
 FROM node:alpine as builder
+ENV NODE_OPTIONS="--no-experimental-webstorage"
 WORKDIR '/app'
 COPY ./package.json ./
 RUN npm install
