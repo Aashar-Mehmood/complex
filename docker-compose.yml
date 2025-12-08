@@ -31,6 +31,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./server
+    ports:
+      - "8000:8000"      # EXPOSE API port
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -47,6 +49,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./client
+    ports:
+      - "5000:5000"      # EXPOSE CLIENT port
     depends_on:
       - api
 
