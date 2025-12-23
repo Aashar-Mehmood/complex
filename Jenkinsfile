@@ -56,6 +56,7 @@ pipeline {
                                     credentialsId: 'aashar-aws-creds', 
                                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
+                        source ~/.venvs/ebcli/bin/activate
                         eb init ${AWS_EB_APP_NAME} --platform "Docker" --region ${AWS_REGION}
                         eb use ${AWS_EB_ENV_NAME}
                         eb deploy
