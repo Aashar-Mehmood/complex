@@ -5,6 +5,8 @@ pipeline {
         AWS_EB_APP_NAME = 'complex'
         AWS_EB_ENV_NAME = 'Complex-env'
         AWS_REGION = 'eu-north-1'
+        DOCKER_TLS_VERIFY = ''
+        DOCKER_CERT_PATH = ''
     }
     stages {
         stage('Test Frontend') {
